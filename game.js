@@ -1,5 +1,9 @@
 /*JavaScript for Fifteen Puzzle
-Extra Feature: End-of_Game Notification */
+Extra Feature: End-of_Game Notification 
+Extra Feature: Move Count/ Time Elapsed
+Extra Feature: Multiple Backgrounds
+Extra Feature: Music
+*/
 
 //globally declared variables
 let gamePiece;
@@ -7,8 +11,18 @@ let notify;
 let timer;
 let spaceY;
 let spaceX;
+let backgroundurls = []
+backgroundurls.push("url(https://monkeyshinegames.com/wp-content/uploads/2018/11/400px-logo-pop.png)");
+backgroundurls.push("url(https://vignette.wikia.nocookie.net/winniethepooh/images/3/3d/Wheel-peace-sign-3-400px.png/revision/latest?cb=20130509210107)");
+backgroundurls.push("url(https://kabusiki-okuribito.com/wp-content/uploads/2019/02/icon_400px.png)");
+backgroundurls.push("url(https://openlab.citytech.cuny.edu/sli-eportfolio/files/2015/05/Apr-30-color-composition-400-by-4001.gif)");
+let bgindex = Math.floor(Math.random()*4);
+let startTime 
+let endTime;
+let timediff;
+let move;
 
-window.onload = function () {
+function start() {
   let puzzleArea = document.getElementById("puzzlearea");
   gamePiece = puzzleArea.getElementsByTagName("div"); //retrieve element within puzzlearea
 
@@ -22,6 +36,8 @@ window.onload = function () {
     gamePiece[i].style.left = (i % 4) * 100 + "px"; //calculates the position for puzzle pieces from the left of the screen
 
     gamePiece[i].style.top = parseInt(i / 4) * 100 + "px"; //calculates the position for puzzle pieces from the top of the screen
+
+    gamePiece[i].style.backgroundImage = backgroundurls[bgindex];
 
     gamePiece[i].style.backgroundPosition =
       "-" + gamePiece[i].style.left + " " + "-" + gamePiece[i].style.top;
@@ -40,8 +56,6 @@ window.onload = function () {
 
           this.style.textDecoration = "underline"; //underlines the number of the puzzle piece piece
 
-          this.style.backgroundImage = "url(./img/papermario.webp)";
-          //sets the image for the puzzle's background
         }
       };
 
@@ -85,6 +99,8 @@ window.onload = function () {
     function () //activates whenever the shuffle button is clicked
 
     {
+      starttimer();
+      
       for (let i = 0; i < 300; i++) {
         let rand = parseInt(Math.random() * 100) % 4; //generates a random number for shuffling each piece
 
@@ -120,6 +136,7 @@ window.onload = function () {
           }
         }
       }
+      move = 0;
     };
 };
 
@@ -155,7 +172,7 @@ function Notify() {
 
     body[0].style.backgroundImage = "none"; //reverts to original page background
 
-    alert("Winner! ... Shuffle and Play Again"); //tells the user that they have won the game
+    alert("Winner! ... Shuffle and Play Again \n" + "Moves: " + move + "\nTime: "+ Math.floor(timediff/60) + ":" + (timediff%60)); //tells the user that they have won the game
 
     let para = document.getElementsByClassName("explanation");
     para[0].style.visibility = "visible"; //reverts visiblity to its original state
@@ -167,7 +184,7 @@ function Notify() {
     let body = document.getElementsByTagName("body");
 
     body[0].style.backgroundImage =
-      "url('http://assets.pokemon.com/assets/cms2/img/video-games/video-games/pokemon_go/boxart.jpg')";
+      "url('https://th.bing.com/th/id/OIP.8_74zmoQ-DQjaUAmlKapowHaEK?pid=ImgDet&rs=1')";
     //sets background pic to show user that they had completed the puzzle
   }
 
@@ -177,10 +194,13 @@ function Notify() {
 function win() {
   //notifies user that they have won
 
+  endtimer();
+  console.log(move);
+
   let body = document.getElementsByTagName("body");
 
   body[0].style.backgroundImage =
-    "url('http://assets.pokemon.com/assets/cms2/img/video-games/video-games/pokemon_go/boxart.jpg')";
+    "url('https://th.bing.com/th/id/OIP.8_74zmoQ-DQjaUAmlKapowHaEK?pid=ImgDet&rs=1')";
 
   notify = 10; //initializes notify variable
 
@@ -300,6 +320,10 @@ function down(x, y) {
 
 function swap(position) {
   //moves the puzzle piece by switching position with an empty space
+  move = move + 1;
+
+  console.log(move);
+
   let temp = gamePiece[position].style.top;
 
   gamePiece[position].style.top = spaceY;
@@ -312,3 +336,29 @@ function swap(position) {
 
   spaceX = temp;
 }
+
+function imageselected(){
+  var select = document.getElementById("Bg");
+  bgindex = select.selectedIndex;
+  start();
+}
+
+function starttimer() {
+  startTime = new Date();
+  console.log("timerstart");
+};
+
+function endtimer() {
+ 
+  endTime = new Date();
+  console.log("timerend");
+  timediff = endTime - startTime; //in ms
+  // strip the ms
+  timediff = timediff/1000;
+
+  // get seconds 
+  timediff = Math.round(timediff);
+
+  console.log(timediff + " seconds");
+}
+

@@ -51,4 +51,13 @@ h1 {
   border-color: red;
   color: #006600;
   text-decoration: underline;
+
 }
+
+
+
+/*This will animate the movable piece class on click */
+.movablepiece:active {
+ 
+}
+
